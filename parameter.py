@@ -5,6 +5,11 @@ Created on Wed Jan 27 17:36:13 2021
 
 @author: t.yamamoto
 """
+SPEECH_PATH="/speech_dir" #target signal
+NOISE_PATH="/noise_dir" #noise signal
+
+MODEL_PATH = "model" # save model
+PATH_FFT = "./dataset_dir" # save dataset
 
 SR = 16000
 H = 512
@@ -14,10 +19,3 @@ PATCH_LENGTH = 128
 
 learning_rate=0.0001
 epochs=500
-
-PATH_FFT = "./Uspec"
-
-SPEECH_PATH="/disk107/Datasets/CMU_ARCTIC"
-NOISE_PATH="/disk107/Datasets/noise/noise"
-
-MODEL_PATH = "model"
