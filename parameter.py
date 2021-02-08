@@ -11,6 +11,8 @@ NOISE_PATH="/noise_dir" #noise signal
 MODEL_PATH = "model" # save model
 PATH_FFT = "./dataset_dir" # save dataset
 
+datatimes = 10 #Increase the data n times
+
 SR = 16000
 H = 512
 FFT_SIZE = 1024
