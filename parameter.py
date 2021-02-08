@@ -12,12 +12,12 @@ FFT_SIZE = 1024
 BATCH_SIZE = 64
 PATCH_LENGTH = 128
 
-learning_rate=0.0005
-epochs=400
+learning_rate=0.0001
+epochs=500
 
-PATH_FFT = "./stft_data" #データセットの生成場所
+PATH_FFT = "./Uspec"
 
-KEY_TYPE="./noise_data" #目的としない音声
-UTT_PATH="./speech_data" #目的音声
+SPEECH_PATH="/disk107/Datasets/CMU_ARCTIC"
+NOISE_PATH="/disk107/Datasets/noise/noise"
 
-MODEL_PATH = "model" # モデルの保存場所
+MODEL_PATH = "model"
