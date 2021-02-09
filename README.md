@@ -8,6 +8,24 @@
 ## step1
 `parameter.py`より各種パスやパラメーターを指定する
 
+必要項目
+```
+MODEL_PATH
+PATH_FFT
+MUSDB_PATH
+
+datatimes = 10 #Increase the data n times
+
+SR = 16000
+H = 512
+FFT_SIZE = 1024
+BATCH_SIZE = 64
+PATCH_LENGTH = 128
+
+learning_rate=0.0001
+epochs=500
+```
+
 ## step2
 音声の事前処理を行います
 Run `python3 preprocessing_musdb.py`
