@@ -25,11 +25,24 @@ PATCH_LENGTH = 128
 learning_rate=0.0001
 epochs=500
 ```
+`datatimes`で指定した数値倍に音声を増やします。
 
 ## step2
 音声の事前処理を行います
 Run `python3 preprocessing_musdb.py`
 
+回すたびに`datatimes`倍音声を増やすので、足りなければ都度実行してください。
+今回はMUSDBの訓練データ、検証データ関係なく全てのデータを使って学習します。
+ベンチマークにはほかのデータをご用意ください。
+
 ## step3
 学習
 Run `python3 train.py`
+
+学習中の損失曲線はjupyter notebook`check_loss`で確認できます。
+`MODEL_PATH`に指定したディレクトリ内から最新の`loss_ ~ .npz`ファイルを選択し実行してください。
+
+## step4
+試聴
+
+工事中
