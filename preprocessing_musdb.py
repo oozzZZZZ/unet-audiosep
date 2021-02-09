@@ -79,19 +79,19 @@ def main():
     other_list=glob(musdb_path+"/*/*/other.wav", recursive=True)
     vocals_list=glob(musdb_path+"/*/*/vocals.wav", recursive=True)
 
-    if target == "vocals":
+    if target == C.target:
         noise_list1,noise_list2,noise_list3 = bass_list,drums_list,other_list
         target_list = vocals_list
 
-    if target == "bass":
+    if target == C.target:
         noise_list1,noise_list2,noise_list3 = drums_list , other_list , vocals_list
         target_list = bass_list
 
-    if target == "drums":
+    if target == C.target:
         noise_list1,noise_list2,noise_list3 = bass_list , other_list , vocals_list
         target_list = drums_list
 
-    if target == "other":
+    if target == C.target:
         noise_list1,noise_list2,noise_list3 = bass_list , drums_list , vocals_list
         target_list = other_list
 
