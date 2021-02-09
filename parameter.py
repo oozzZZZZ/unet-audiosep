@@ -8,6 +8,9 @@ Created on Wed Jan 27 17:36:13 2021
 SPEECH_PATH="/speech_dir" #target signal
 NOISE_PATH="/noise_dir" #noise signal
 
+MUSDB_PATH="/MUSDB18"
+target = "vocals"
+
 MODEL_PATH = "model" # save model
 PATH_FFT = "./dataset_dir" # save dataset
 
