@@ -79,30 +79,29 @@ def main():
     other_list=glob(musdb_path+"/*/*/other.wav", recursive=True)
     vocals_list=glob(musdb_path+"/*/*/vocals.wav", recursive=True)
 
-    if target == C.target:
+    if target == "vocals":
         noise_list1,noise_list2,noise_list3 = bass_list,drums_list,other_list
         target_list = vocals_list
 
-    if target == C.target:
+    if target == "bass":
         noise_list1,noise_list2,noise_list3 = drums_list , other_list , vocals_list
         target_list = bass_list
 
-    if target == C.target:
+    if target == "drums":
         noise_list1,noise_list2,noise_list3 = bass_list , other_list , vocals_list
         target_list = drums_list
 
-    if target == C.target:
+    if target == "other":
         noise_list1,noise_list2,noise_list3 = bass_list , drums_list , vocals_list
         target_list = other_list
 
     noise_num = len(noise_list1)
 
-    random.shuffle(target_list)
-    random.shuffle(noise_list1)
-    random.shuffle(noise_list2)
-    random.shuffle(noise_list3)
-
     for time in tqdm(range(times),leave=True):
+        random.shuffle(target_list)
+        random.shuffle(noise_list1)
+        random.shuffle(noise_list2)
+        random.shuffle(noise_list3)
 
         for target in tqdm(target_list,leave=False):
 
