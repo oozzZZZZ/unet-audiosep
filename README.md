@@ -10,9 +10,11 @@
 
 必要項目
 ```
-MODEL_PATH
-PATH_FFT
-MUSDB_PATH
+MODEL_PATH = "D:/yamamoto/model_musdb" # save model
+PATH_FFT = "D:/yamamoto/musdb_stft_dataset" # save dataset
+
+MUSDB_PATH = "D:/yamamoto/音源分離用データ/MUSDB"
+target = "vocals"
 
 datatimes = 10 #Increase the data n times
 
@@ -23,7 +25,9 @@ BATCH_SIZE = 64
 PATCH_LENGTH = 128
 
 learning_rate=0.0001
-epochs=500
+epochs=600
+
+pre_trained_model = "./model/model_20210208_060155.pt" #事前学習モデル
 ```
 `datatimes`で指定した数値倍に音声を増やします。
 
