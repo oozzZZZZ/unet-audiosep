@@ -5,9 +5,6 @@ Created on Wed Jan 27 17:36:13 2021
 
 @author: t.yamamoto
 """
-SPEECH_PATH="/speech_dir" #target signal
-NOISE_PATH="/noise_dir" #noise signal
-
 MODEL_PATH = "D:/yamamoto/model_musdb" # save model
 PATH_FFT = "D:/yamamoto/musdb_stft_dataset" # save dataset
 
