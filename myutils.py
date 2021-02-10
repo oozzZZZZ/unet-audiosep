@@ -148,8 +148,13 @@ def MyDataLoader():
     traindataset = utils.TensorDataset(tensor_speech_trainlist,tensor_addnoise_trainlist)
     data_split = [int(0.2 * train_num),int(0.8 * train_num)]
     train_dataset,val_dataset = utils.random_split(traindataset,data_split)
-
-    train_loader = utils.DataLoader(train_dataset,batch_size=C.BATCH_SIZE,num_workers=os.cpu_count(),pin_memory=True,shuffle=True)
-    val_loader = utils.DataLoader(val_dataset,batch_size=C.BATCH_SIZE,num_workers=os.cpu_count(),pin_memory=True,shuffle=True)
+    
+    # Windowsではこっち
+    train_loader = utils.DataLoader(train_dataset,batch_size=C.BATCH_SIZE,pin_memory=True,shuffle=True)
+    val_loader = utils.DataLoader(val_dataset,batch_size=C.BATCH_SIZE,pin_memory=True,shuffle=True)
+    
+    # Mac, Linuxではこっち
+#     train_loader = utils.DataLoader(train_dataset,batch_size=C.BATCH_SIZE,num_workers=os.cpu_count(),pin_memory=True,shuffle=True)
+#     val_loader = utils.DataLoader(val_dataset,batch_size=C.BATCH_SIZE,num_workers=os.cpu_count(),pin_memory=True,shuffle=True)
     
     return train_loader,val_loader
