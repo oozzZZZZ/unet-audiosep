@@ -11,6 +11,9 @@ PATH_FFT = "D:/yamamoto/musdb_stft_dataset" # save dataset
 MUSDB_PATH = "D:/yamamoto/音源分離用データ/MUSDB"
 target = "vocals"
 
+WINDOWS = True
+# Select your OS: Windows=>True / mac or linux=>False
+
 datatimes = 10 #Increase the data n times
 
 SR = 16000
