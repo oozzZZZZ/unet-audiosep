@@ -8,13 +8,13 @@ Created on Wed Jan 27 17:36:13 2021
 MODEL_PATH = "D:/yamamoto/model_musdb" # save model
 PATH_FFT = "D:/yamamoto/musdb_stft_dataset" # save dataset
 
-MUSDB_PATH = "D:/yamamoto/音源分離用データ/MUSDB"
-target = "vocals"
+MUSDB_PATH = "D:/yamamoto/音源分離用データ/MUSDB" # musdb18 dir path
+target = "vocals" # vocals/drums/bass/other separation target
 
 WINDOWS = True
 # Select your OS: Windows=>True / mac or linux=>False
 
-datatimes = 10 #Increase the data n times
+datatimes = 10 #Increase training data n times
 
 SR = 16000
 H = 512
