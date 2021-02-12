@@ -25,4 +25,5 @@ PATCH_LENGTH = 128
 learning_rate=0.0001
 epochs=600
 
+pre_trained = False
 pre_trained_model = "./model/model_20210208_060155.pt" #事前学習モデル
