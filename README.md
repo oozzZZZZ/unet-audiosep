@@ -5,11 +5,14 @@
 
 ここではMUSDB18を使った音楽音源分離のための方法について書きます
 
+## 環境構築
+`sh setup.sh`
+
 ## step1
 `parameter.py`より各種パスやパラメーターを指定する
 
 ```
-MODEL_PATH = "D:/yamamoto/model_musdb" # save model
+MODEL_PATH = "D:/yamamoto/model_musdb" # dir for save model
 PATH_FFT = "D:/yamamoto/musdb_stft_dataset" # save dataset
 
 MUSDB_PATH = "D:/yamamoto/音源分離用データ/MUSDB" # musdb18 dir path
@@ -35,23 +38,10 @@ pre_trained_model = "./model/model_20210208_060155.pt" #事前学習モデル
 `target` : 分離したい音声を指定する。
 
 ## step2
-音声の事前処理を行います
-Run `python3 preprocessing_musdb.py`
-
-各トラックの音声をシャッフルし、毎回新たな曲を適当に生成しています。
-回すたびに`datatimes`倍音声を増やすので、足りなければ都度実行してください。
-今回はMUSDBの訓練データ、検証データ関係なく全てのデータを使って学習します。
-ベンチマークにはほかのデータをご用意ください。
-ちょっと聞く分にはデータセット内のミックス音声を使ってやってください。
+学習のための音声を生成し、学習を行います。<br>
+Run `sh run.sh`
 
 ## step3
-学習
-Run `python3 train.py`
+試聴方法<br>
+`listen.jpynb`
 
-学習中の損失曲線はjupyter notebook`check_loss`で確認できます。
-`MODEL_PATH`に指定したディレクトリ内から最新の`loss_ ~ .npz`ファイルを選択し実行してください。
-
-## step4
-試聴
-
-工事中
