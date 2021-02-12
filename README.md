@@ -40,7 +40,8 @@ pre_trained_model = "./model/model_20210208_060155.pt" #事前学習モデル
 
 ## step2
 学習のための音声を生成し、学習を行います。<br>
-Run `sh run.sh`
+Run `sh run.sh`<br>
+学習曲線は`chack_loss.jpynb`で確認できます。
 
 ## step3
 試聴方法<br>
