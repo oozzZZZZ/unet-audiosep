@@ -37,8 +37,9 @@ def main():
     train_loader,val_loader = ut.MyDataLoader()
     
     model = network.UnetConv2()
-    model.load_state_dict(torch.load(pre_model_path))
-    model = model.to(device)
+    if C.pre_trained:
+        model.load_state_dict(torch.load(pre_model_path))
+        model = model.to(device)
     
     criterion = nn.L1Loss().to(device)
     optimizer = optim.Adam(model.parameters(), lr=C.learning_rate)
