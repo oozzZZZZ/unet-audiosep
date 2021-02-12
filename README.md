@@ -45,5 +45,5 @@ Run `sh run.sh`
 試聴方法<br>
 `listen.jpynb`
 
-## Refernce
+## 参考文献
 Jansson, A., Humphrey, E., Montecchio, N., Bittner, R., Kumar, A., & Weyde, T. (2017). Singing voice separation with deep u-net convolutional networks.
