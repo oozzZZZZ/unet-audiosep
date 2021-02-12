@@ -35,7 +35,8 @@ epochs=600
 pre_trained_model = "./model/model_20210208_060155.pt" #事前学習モデル
 ```
 `datatimes`で指定した数値倍に音声を増やします。<br>
-`target` : 分離したい音声を指定する。
+`target` : 分離したい音声を指定する。<br>
+`WINDOWS` : OSを選択してください。<br>
 
 ## step2
 学習のための音声を生成し、学習を行います。<br>
