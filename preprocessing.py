@@ -1,94 +1,110 @@
-#!/usr/bin/env python3
-# -*- coding: utf-8 -*-
-"""
-Created on Mon Feb  8 14:07:45 2021
-
-@author: t.yamamoto
-"""
 import os
 from tqdm import tqdm
 import random
 import numpy as np
+from glob import glob
 import datetime
 
 from librosa.util import find_files
 from librosa.core import load,stft,resample
+import librosa
 
 import parameter as C
 
 PATH_FFT = C.PATH_FFT
-SPEECH_PATH = C.SPEECH_PATH
+SPEECH_PATH = C.TARGET_PATH
 NOISE_PATH = C.NOISE_PATH
+
+PATCH_LENGTH=C.PATCH_LENGTH
+
+aug = C.augmentation
 
 times = C.datatimes
 
-for time in tqdm(range(times)):
+def stretch(data, rate=1):
+    input_length = len(data)
+    data = librosa.effects.time_stretch(data, rate)
+    if len(data)>input_length:
+        data = data[:input_length]
+    else:
+        data = np.pad(data, (0, max(0, input_length - len(data))), "constant")
+    return data
 
-    speechlist = find_files(SPEECH_PATH, ext="wav")
-    noiselist = find_files(NOISE_PATH, ext="wav")
+def time_shift(data,shift):
+    data_roll = np.roll(data, shift)
+    return data_roll
 
-    random.shuffle(speechlist)
-    random.shuffle(noiselist)
+def pitch_shift(data,sample_rate,shift):
+    ret = librosa.effects.pitch_shift(data, sample_rate, shift, bins_per_octave=12, res_type='kaiser_best')
+    return ret
+
+def loadAudio(filename,augmentation=True):
+    data, sr = load(filename, sr=None)
+    if sr != C.SR:
+        data = resample(data, sr, C.SR)
+        
+    if augmentation:
+        """
+        AUGMENTATION
+        1. Amp
+        2. Stretch
+        3. Time Shift
+        4. Pitch Shift
+        """
+        # 1. Amplitude
+        data = data * random.uniform(0.8, 1.2)
+
+        # 2. Stretch
+        data = stretch(data, rate=random.uniform(0.8, 1.2))
+
+        # 3. Time Shift
+        data = time_shift(data,int(random.uniform(2**10, 2**13)))
+
+        # 4. Pitch Shift
+        data = pitch_shift(data,C.SR,random.uniform(-12, 12))
+    
+    # waveform -> Spec
+    data = stft(data, n_fft=C.FFT_SIZE, hop_length=C.H, win_length=C.FFT_SIZE)
+    return data
+
+#main
+def main():
 
     if not os.path.exists(PATH_FFT):
         os.mkdir(PATH_FFT)
-    noise_num = len(noiselist)
+    target_list = find_files(SPEECH_PATH, ext="wav")
+    noise_list = find_files(NOISE_PATH, ext="wav")
 
-    for i in tqdm(range(len(speechlist)-1),leave=False):
-        
-        target, sr = load(speechlist[i], sr=None)
-        if sr != C.SR:
-            target = resample(target, sr, C.SR)
-            
-        #speech data
-        spec = stft(target, n_fft=C.FFT_SIZE, hop_length=C.H, win_length=C.FFT_SIZE)
-        fulllen=spec.shape[1]
+    noise_num = len(noise_list)
 
-        while fulllen<C.PATCH_LENGTH * (C.BATCH_SIZE+1) :
-            i+=1
-            target, sr = load(speechlist[i], sr=None)
-            if sr != C.SR:
-                target = resample(target, sr, C.SR)
-            conc = stft(target, n_fft=C.FFT_SIZE, hop_length=C.H, win_length=C.FFT_SIZE)
-            spec = np.concatenate((spec,conc),1)
-            fulllen = spec.shape[1]
-        speech_spec = spec[:C.PATCH_LENGTH * (C.BATCH_SIZE+1) ]
+    for time in tqdm(range(times),leave=True):
+        random.shuffle(target_list)
+        random.shuffle(noise_list)
 
-        #noise data
-        noise, sr = load(noiselist[[random.randint(0, noise_num-1)]], sr=None)
-        if sr != C.SR:
-            noise = resample(noise, sr, C.SR)
-        spec = stft(noise, n_fft=C.FFT_SIZE, hop_length=C.H, win_length=C.FFT_SIZE)
-        fulllen=spec.shape[1]
+        for target in tqdm(target_list,leave=False):
 
-        while fulllen<C.PATCH_LENGTH * (C.BATCH_SIZE+1) :
-            i+=1
-            noise, sr = load(noiselist[[random.randint(0, noise_num-1)]], sr=None)
-            if sr != C.SR:
-                noise = resample(noise, sr, C.SR)
-            conc = stft(noise, n_fft=C.FFT_SIZE, hop_length=C.H, win_length=C.FFT_SIZE)
-            spec = np.concatenate((spec,conc),1)
-            space = np.zeros([spec.shape[0],random.randint(1,120)])
-            spec = np.concatenate((spec,space),1)
-            fulllen = spec.shape[1]
-        noise_spec = spec[:C.PATCH_LENGTH * (C.BATCH_SIZE+1)]
+            target=loadAudio(target,augmentation=aug)
+            noise=loadAudio(noise_list[random.randint(0, noise_num-1)],augmentation=aug)
 
-        #data mixer
-        speech_spec=speech_spec[:,: C.PATCH_LENGTH * C.BATCH_SIZE]
-        noise_spec=noise_spec[:,: C.PATCH_LENGTH * C.BATCH_SIZE]
-        mix_spec=speech_spec+noise_spec
+            length=min(target.shape[1],noise.shape[1])
 
-        speech_mag = np.abs(speech_spec)
-        speech_mag /= np.max(speech_mag)
-        mix_mag = np.abs(mix_spec)
-        mix_mag /= np.max(mix_mag)
-            
-        iterate = 0
-        now = datetime.datetime.now()
-        while length > C.PATCH_LENGTH:
-            save_target = speech_mag[:,C.PATCH_LENGTH * iterate:C.PATCH_LENGTH * (iterate+1)]
-            save_data = mix_mag[:,C.PATCH_LENGTH * iterate:C.PATCH_LENGTH * (iterate+1)]
-            fname = now.strftime('%Y%m%d%H%M%S') + "_" + str(iterate)
-            np.savez(os.path.join(C.PATH_FFT, fname+".npz"),target=save_target, data=save_data)
-            length-=PATCH_LENGTH
-            iterate+=1
+            target,noise=target[:,:length],noise[:,:length]
+            addnoise = target+noise
+
+            target = np.abs(target)
+            target /= np.max(target)
+            addnoise = np.abs(addnoise)
+            addnoise /= np.max(addnoise)
+
+            iterate = 0
+            now = datetime.datetime.now()
+            while length > PATCH_LENGTH:
+                save_target = target[:,PATCH_LENGTH * iterate:PATCH_LENGTH * (iterate+1)]
+                save_data = addnoise[:,PATCH_LENGTH * iterate:PATCH_LENGTH * (iterate+1)]
+                fname = now.strftime('%Y%m%d%H%M%S') + "_" + str(iterate)
+                np.savez(os.path.join(PATH_FFT, fname+".npz"),target=save_target, data=save_data)
+                length-=PATCH_LENGTH
+                iterate+=1
+             
+if __name__ == "__main__":
+    main()
