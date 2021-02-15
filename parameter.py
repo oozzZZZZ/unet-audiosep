@@ -26,7 +26,7 @@ learning_rate=0.0001
 epochs=600
 
 #datasplit
-train,val = 0.8, 0.2
+train,val = 0.8, 0.2 # train + val = 1.0
 
 pre_trained = False
 pre_trained_model = "./model/model_20210208_060155.pt" #事前学習モデル
