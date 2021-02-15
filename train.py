@@ -38,6 +38,7 @@ def main():
     if C.pre_trained:
         model.load_state_dict(torch.load(C.pre_model_path))
         model = model.to(device)
+        print("Load pretrained model",C.pre_model_path)
     
     criterion = nn.L1Loss().to(device)
     optimizer = optim.Adam(model.parameters(), lr=C.learning_rate)
