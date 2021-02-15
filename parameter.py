@@ -14,6 +14,7 @@ target = "vocals" # vocals/drums/bass/other separation target
 WINDOWS = True
 # Select your OS: Windows=>True / mac or linux=>False
 
+augmentation = True
 datatimes = 10 #Increase training data n times
 
 SR = 16000
