@@ -25,6 +25,7 @@ PATCH_LENGTH = 128
 
 learning_rate=0.0001
 epochs=600
+save_epoch=20
 
 #datasplit
 train,val = 0.8, 0.2 # train + val = 1.0
