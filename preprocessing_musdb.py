@@ -19,6 +19,8 @@ NOISE_PATH = C.NOISE_PATH
 
 PATCH_LENGTH=C.PATCH_LENGTH
 
+aug = C.augmentation
+
 times = C.datatimes
 musdb_path=C.MUSDB_PATH
 
@@ -105,10 +107,10 @@ def main():
 
         for target in tqdm(target_list,leave=False):
 
-            target=loadAudio(target,augmentation=True)
-            noise1=loadAudio(noise_list1[random.randint(0, noise_num-1)],augmentation=True)
-            noise2=loadAudio(noise_list2[random.randint(0, noise_num-1)],augmentation=True)
-            noise3=loadAudio(noise_list3[random.randint(0, noise_num-1)],augmentation=True)
+            target=loadAudio(target,augmentation=aug)
+            noise1=loadAudio(noise_list1[random.randint(0, noise_num-1)],augmentation=aug)
+            noise2=loadAudio(noise_list2[random.randint(0, noise_num-1)],augmentation=aug)
+            noise3=loadAudio(noise_list3[random.randint(0, noise_num-1)],augmentation=aug)
 
             length=min(target.shape[1],noise1.shape[1],noise2.shape[1],noise3.shape[1])
 
