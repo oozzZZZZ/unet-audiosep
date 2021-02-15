@@ -20,6 +20,11 @@ WINDOWS = True
 # Select your OS: Windows=>True / mac or linux=>False
 
 augmentation = True
+"""
+If augmentation = True     
+Do Amplitude Shift, Audio Stretch, Time Shift,Pitch Shift
+It takes time to process the data.
+"""
 datatimes = 10 #Increase training data n times
 
 SR = 16000
