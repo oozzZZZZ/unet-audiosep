@@ -17,7 +17,7 @@
 
 ## step2
 学習のための音声を生成し、学習を行います。<br>
-Run `sh run.sh`<br>
+Run `sh train.sh`<br>
 学習曲線は`chack_loss.jpynb`で確認できます。
 
 ## step3
