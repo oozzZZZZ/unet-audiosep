@@ -149,7 +149,7 @@ def MyDataLoader():
     print(">>Use data :", train_num)
     
     traindataset = utils.TensorDataset(tensor_speech_trainlist,tensor_addnoise_trainlist)
-    data_split = [int(0.2 * train_num),int(0.8 * train_num)]
+    data_split = [int(C.train * train_num),int(C.val * train_num)]
     train_dataset,val_dataset = utils.random_split(traindataset,data_split)
     
     if C.WINDOWS:
