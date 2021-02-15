@@ -9,6 +9,7 @@ import os
 from tqdm import tqdm
 import random
 import numpy as np
+import datetime
 
 from librosa.util import find_files
 from librosa.core import load,stft,resample
@@ -81,9 +82,13 @@ for time in tqdm(range(times)):
         speech_mag /= np.max(speech_mag)
         mix_mag = np.abs(mix_spec)
         mix_mag /= np.max(mix_mag)
-
-        for iterate in range(C.BATCH_SIZE):
-            target = speech_mag[:,C.PATCH_LENGTH * iterate:C.PATCH_LENGTH * (iterate+1)]
-            data = mix_mag[:,C.PATCH_LENGTH * iterate:C.PATCH_LENGTH * (iterate+1)]
-            fname = str(i) + "_" + str(iterate) +"_" + str(time)
-            np.savez(os.path.join(PATH_FFT, fname+".npz"),speech=target, addnoise=data)
+            
+        iterate = 0
+        now = datetime.datetime.now()
+        while length > C.PATCH_LENGTH:
+            save_target = speech_mag[:,C.PATCH_LENGTH * iterate:C.PATCH_LENGTH * (iterate+1)]
+            save_data = mix_mag[:,C.PATCH_LENGTH * iterate:C.PATCH_LENGTH * (iterate+1)]
+            fname = now.strftime('%Y%m%d%H%M%S') + "_" + str(iterate)
+            np.savez(os.path.join(C.PATH_FFT, fname+".npz"),target=save_target, data=save_data)
+            length-=PATCH_LENGTH
+            iterate+=1
