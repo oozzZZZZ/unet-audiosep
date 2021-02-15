@@ -38,7 +38,7 @@ def main():
     
     model = network.UnetConv2()
     if C.pre_trained:
-        model.load_state_dict(torch.load(pre_model_path))
+        model.load_state_dict(torch.load(C.pre_model_path))
         model = model.to(device)
     
     criterion = nn.L1Loss().to(device)
