@@ -144,13 +144,14 @@ def MyDataLoader():
     tensor_speech_trainlist = torch.stack(speech_trainlist[:train_num])
     tensor_addnoise_trainlist = torch.stack(addnoise_trainlist[:train_num])
     
-    print("Train dataset")
-    print(">>Available data :", len(speech_trainlist))
-    print(">>Use data :", train_num)
+    print("Dataset")
+    print(" >>Available data :", len(speech_trainlist))
+    print(" >>Use data :", train_num)
     
     traindataset = utils.TensorDataset(tensor_speech_trainlist,tensor_addnoise_trainlist)
     data_split = [int(C.train * train_num),int(C.val * train_num)]
     train_dataset,val_dataset = utils.random_split(traindataset,data_split)
+    print("\nTrain dataset",len(train_dataset),"\nVal Dataset",len(val_dataset))
     
     if C.WINDOWS:
         # Windowsではこっち
