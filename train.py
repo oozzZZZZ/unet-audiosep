@@ -22,8 +22,6 @@ import network
 
 def main():
     
-    pre_model_path = C.pre_model_path
-
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
     print("CUDA is available:", torch.cuda.is_available())
     
