@@ -4,6 +4,7 @@
 音楽音声音源分離だけでなく、ノイズ除去などにも利用可能です。
 
 ## 環境構築
+macでしか動作確認していません。
 ```
 git clone https://github.com/oozzZZZZ/unet-audiosep
 cd unet-audiosep
