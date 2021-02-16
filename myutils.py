@@ -12,11 +12,12 @@ import torch.utils.data as utils
 from tqdm import tqdm
 import random
 
-from librosa.core import load,stft,resample
+from librosa.core import load,stft,resample,istft
 from librosa.util import find_files
 from librosa.effects import pitch_shift, time_stretch
 
 import parameter as C
+import network
 
 def LoadAudio(fname):
     y, sr = load(fname, sr=None)
@@ -163,3 +164,107 @@ def MyDataLoader():
         val_loader = utils.DataLoader(val_dataset,batch_size=C.BATCH_SIZE,num_workers=os.cpu_count(),pin_memory=True,shuffle=True)
     
     return train_loader,val_loader
+
+def denoiser(audio_data,model_path,hard_rate=0.9):
+
+    
+    SR = 16000
+    H = 512
+    FFT_SIZE = 1024
+    BATCH_SIZE = 64
+    PATCH_LENGTH = 128
+
+    model = network.UnetConv2()
+    model.load_state_dict(torch.load(model_path))
+
+    spec = stft(audio_data, n_fft=FFT_SIZE, hop_length=H, win_length=FFT_SIZE)
+
+    mag = np.abs(spec)
+    mag /= np.max(mag)
+    phase = np.exp(1.j*np.angle(spec))
+
+    full_len=mag.shape[1]
+    times, mod = divmod(full_len, PATCH_LENGTH * BATCH_SIZE)
+
+    if not times==0:
+        for i in range(times):
+            process = mag[:,PATCH_LENGTH * BATCH_SIZE * i:PATCH_LENGTH * BATCH_SIZE * (i+1)]
+            listen_list=[]
+            for iterate in range(BATCH_SIZE):
+                _data = process[:,PATCH_LENGTH * iterate:PATCH_LENGTH * (iterate+1)]
+                _data=torch.from_numpy(_data.astype(np.float32)).clone()
+                listen_list.append(_data)
+            tensor_data = torch.stack(listen_list)
+            mask=model(tensor_data)
+            mask[mask < hard_rate]=0
+            h=tensor_data * mask
+            h = h.to('cpu').detach().numpy().copy()
+            mask_inst=1-mask
+            inst=tensor_data * mask_inst
+            inst = inst.to('cpu').detach().numpy().copy()
+
+            if i==0:
+                output = h[0,:,:]
+                output_inst = inst[0,:,:]
+                for f in range(1,BATCH_SIZE):
+                    output = np.concatenate([output, h[f,:,:]], 1)
+                    output_inst = np.concatenate([output_inst, inst[f,:,:]], 1)
+
+            else:
+                for f in range(BATCH_SIZE):
+                    output = np.concatenate([output, h[f,:,:]], 1)
+                    output_inst = np.concatenate([output_inst, inst[f,:,:]], 1)
+
+        if not mod==0:            
+            process = mag[:,-mod:]
+            addempty=np.zeros([mag.shape[0],PATCH_LENGTH * BATCH_SIZE - mod])
+            process = np.concatenate([process,addempty], 1)
+
+            listen_list=[]
+            for iterate in range(BATCH_SIZE):
+                _data = process[:,PATCH_LENGTH * iterate:PATCH_LENGTH * (iterate+1)]
+                _data=torch.from_numpy(_data.astype(np.float32)).clone()
+                listen_list.append(_data)
+            tensor_data = torch.stack(listen_list)
+            mask=model(tensor_data)
+            mask[mask < hard_rate]=0
+            h=tensor_data * mask
+            h = h.to('cpu').detach().numpy().copy()
+            mask_inst=1-mask
+            inst=tensor_data * mask_inst
+            inst = inst.to('cpu').detach().numpy().copy()
+            for f in range(BATCH_SIZE):
+                output = np.concatenate([output, h[f,:,:]], 1)
+                output_inst = np.concatenate([output_inst, inst[f,:,:]], 1)
+
+    else:
+        process = mag[:,-mod:]
+        addempty=np.zeros([mag.shape[0],PATCH_LENGTH * BATCH_SIZE - mod])
+        process = np.concatenate([process,addempty], 1)
+
+        listen_list=[]
+        for iterate in range(BATCH_SIZE):
+            _data = process[:,PATCH_LENGTH * iterate:PATCH_LENGTH * (iterate+1)]
+            _data=torch.from_numpy(_data.astype(np.float32)).clone()
+            listen_list.append(_data)
+        tensor_data = torch.stack(listen_list)
+        mask=model(tensor_data)
+        mask/=torch.max(mask)
+        mask[mask < hard_rate]=0
+        h=tensor_data * mask
+        h = h.to('cpu').detach().numpy().copy()
+        
+        mask_inst=1-mask
+        inst=tensor_data * mask_inst
+        inst = inst.to('cpu').detach().numpy().copy()
+        
+        output_inst = inst[0,:,:]
+        output = h[0,:,:]
+        for f in range(1,BATCH_SIZE):
+            output = np.concatenate([output, h[f,:,:]], 1)
+            output_inst = np.concatenate([output_inst, inst[f,:,:]], 1)
+            
+    denoise=istft(output[:,:phase.shape[1]]*phase,hop_length=H, win_length=FFT_SIZE)
+    inst=istft(output_inst[:,:phase.shape[1]]*phase,hop_length=H, win_length=FFT_SIZE)
+
+    return denoise,inst
