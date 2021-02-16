@@ -11,7 +11,7 @@ import torch
 import torch.utils.data as utils
 from tqdm import tqdm
 import random
-
+from scipy.io.wavfile import write
 from librosa.core import load,stft,resample,istft
 from librosa.util import find_files
 from librosa.effects import pitch_shift, time_stretch
@@ -268,3 +268,10 @@ def denoiser(audio_data,model_path,hard_rate=0.9):
     inst=istft(output_inst[:,:phase.shape[1]]*phase,hop_length=H, win_length=FFT_SIZE)
 
     return denoise,inst
+
+def separation_main(filename,model,maskrate,vocalpath,instpath):
+    model_path = './model/model/'+model+'.pt'
+    data, sr = load(filename, sr=16000)
+    vocal,inst = denoiser(data,model_path,hard_rate=maskrate)
+    write(vocalpath, 16000, vocal/np.max(vocal))
+    write(instpath, 16000, inst/np.max(inst))
