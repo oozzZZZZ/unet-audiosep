@@ -14,6 +14,8 @@ sh setup.sh
 GUIから分離音声を選択できます。<br>
 `sh run.sh`
 
+Epoch８０, Mask Rate85%くらいがおすすめですが，曲によって得手不得手あるようなのでいろいろ試してみてください。
+
 # Reference
 [Jansson, A., Humphrey, E., Montecchio, N., Bittner, R., Kumar, A., & Weyde, T. (2017). Singing voice separation with deep u-net convolutional networks.](https://openaccess.city.ac.uk/id/eprint/19289/)
 
