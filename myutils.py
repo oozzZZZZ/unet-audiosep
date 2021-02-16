@@ -175,7 +175,7 @@ def denoiser(audio_data,model_path,hard_rate=0.9):
     PATCH_LENGTH = 128
 
     model = network.UnetConv2()
-    model.load_state_dict(torch.load(model_path))
+    model.load_state_dict(torch.load(model_path,map_location=torch.device('cpu')))
 
     spec = stft(audio_data, n_fft=FFT_SIZE, hop_length=H, win_length=FFT_SIZE)
 
