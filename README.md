@@ -4,9 +4,11 @@
 音楽音声音源分離だけでなく、ノイズ除去などにも利用可能です。
 
 ## 環境構築
-`git clone https://github.com/oozzZZZZ/unet-audiosep`
-`cd unet-audiosep`
-`sh setup.sh`
+```
+git clone https://github.com/oozzZZZZ/unet-audiosep
+cd unet-audiosep
+sh setup.sh
+```
 
 ## 使い方
 GUIから分離音声を選択できます。<br>
