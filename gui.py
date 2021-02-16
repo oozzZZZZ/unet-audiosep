@@ -95,9 +95,15 @@ button.pack()
 label0 = tk.Label(root, font=('Helvetica', 12), fg='gray')
 label0.pack()
 
+text1 = tk.StringVar()
+text2 = tk.StringVar()
+
+def changeText():
+    label3["text"] = "stand-by"
+    label4["text"] = 'Processing'
+
 def start():
-    label3.config(text = "")
-    label4.config(text = "")
+    changeText()
     filepath=val_filename.get()
     outputpath=val_outputdir.get()
     epoch_num=val_epoch.get()
@@ -109,20 +115,23 @@ def start():
     outname_vocal = outputpath+"/"+basename_without_ext+"_vocal.wav"
     outname_inst = outputpath+"/"+basename_without_ext+"_inst.wav"
     outpath = "Vocal >> {}\nInst >> {}".format(outname_vocal,outname_inst)
-    label3.config(text = outpath)
-    
+
     ut.separation_main(filepath,epoch_num,maskrate,outname_vocal,outname_inst)
-    label4.config(text = "Completed!")
     
+    text1.set(outpath)    
+    text2.set('Completed!')
+
+text1.set("stand-by")
+text1.set("  ")  
     
     
 button1 = tk.Button(root, text="Start Separation", font=("Helvetica", "16", "bold"),width=50,bg="AliceBlue",command=start)
 button1.pack()    
 
-label3 = tk.Label(root, font=('Helvetica', 12), fg='gray')
+label3 = tk.Label(root, textvariable=text1, font=('Helvetica', 12), fg='gray')
 label3.pack()
-
-label4 = tk.Label(root, font=("Helvetica", "16", "bold"))
+label4 = tk.Label(root, textvariable=text2, font=("Helvetica", "16", "bold"))
 label4.pack()
+
 
 root.mainloop()
