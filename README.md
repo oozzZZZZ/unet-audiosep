@@ -20,7 +20,7 @@ pythonのデフォルトがpython2で動作しない時は、.shファイル内�
 Epoch８０, Mask Rate85%くらいがおすすめですが，曲によって得手不得手あるようなのでいろいろ試してみてください。
 
 * `If this fails your Python may not be configured for Tk`のようなエラーが発生する場合、仮想環境の不具合が影響しているようです。
-* tkinterの再インストールを試すか、anaconda環境で実行してみてください。（anaconda推奨です）
+* tkinterの再インストールを試すか、anaconda環境で実行してみてください。（anaconda推奨です） [pyenvのpythonでtkinterを使用する方法](https://qiita.com/skyloken/items/a5f839eba1bd79cd5ef9)
 
 # Reference
 [Jansson, A., Humphrey, E., Montecchio, N., Bittner, R., Kumar, A., & Weyde, T. (2017). Singing voice separation with deep u-net convolutional networks.](https://openaccess.city.ac.uk/id/eprint/19289/)
